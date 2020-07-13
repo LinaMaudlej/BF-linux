@@ -37,8 +37,6 @@ Run:
 You should see that it is installed: 
 Querying Mellanox devices firmware ...
 
---photo 
-
 
 ### rshim drivers: 
 	cd <BlueOS_dir>/src/drivers/rshim
@@ -72,7 +70,8 @@ You should be able to see interface tmfifo_net and two outgoing network interfac
 	sudo ifconfig tmfifo_net0 192.168.100.1/24 up
 	sudo ifconfig <first_interface> 192.168.0.20 up
 	sudo ifconfig <second_interface> 192.168.0.21 up
---photo
+	
+![12](https://user-images.githubusercontent.com/28096724/87291069-80871200-c507-11ea-8289-3cb2709d9a44.png)
 
 
 
