@@ -113,8 +113,9 @@ In your host machine:
 --ibv_rc_pingpong
 
 	show_gids mlx5_1
-	use a GID (RoCE doesn't work with LID-based routing), by picking any index from the GID table (it should probably be the same GID on both sides).
-	My GID index is 3.
+use a GID (RoCE doesn't work with LID-based routing), by picking any index from the GID table (it should probably be the same GID on both sides).
+My GID index is 3.
+	
 	ibv_rc_pingpong -d mlx5_1 -g <3> 
 	ibv_rc_ping_pong -g <3> 192.169.0.21
 	
