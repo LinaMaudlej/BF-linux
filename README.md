@@ -1,10 +1,11 @@
-# Bluefiled on Linux
+# Bluefiled(BF) on Linux
 
 In this document we exaplain how to install Linux distributions on BlueField.
-In our machine we have the host CPU which (in my example plx00) and the Arm of BF. We need to install software in both host and BF side.
-First of all, we want to install the OS (in both). Then we will install the OFED. [Mellanox OFED - is a Mellanox tested and packaged version of OFED and supports two interconnect types using the same RDMA (remote DMA) and kernel bypass APIs called OFED verbs – InfiniBand and Ethernet.]
-Secondly, we will Enable the interface to make a bridge [ping] from the BF. 
-Finally, you can test you BF via the ib_xxx tests of the OFED.
+In our machine we have the host CPU and the Arm of BF. We need to install software in both host and BF side.
+Firstly, we will install the OFED in the host. [Mellanox OFED - is a Mellanox tested and packaged version of OFED and supports two interconnect types using the same RDMA (remote DMA) and kernel bypass APIs called OFED verbs – InfiniBand and Ethernet.]
+Secondly, we will install OFED + Ubuntu in the BF.
+Thirdly, we will set the configuration of the BF (Sperated mode vs Embedded mode)
+Finally, we will our OFED with one example with RDMA and another with OFED examples.
 
 
 # Bluefiled on Ubuntu 18.04
@@ -14,9 +15,10 @@ Finally, you can test you BF via the ib_xxx tests of the OFED.
 3) USB cable connecting the NIC card and the host
 
 ## preinstall
-go to:
+Go to:
 https://www.mellanox.com/products/software/bluefield
-install From BlueField Ubuntu Server 18.04
+*Install BlueField Ubuntu Server 18.04
+*Install 
 
 ### OFED in the Host:
 cd BlueField-2.2.0.11000/distro/rhel/pxeboot
