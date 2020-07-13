@@ -111,6 +111,9 @@ My GID index is 3. Change it in the RDMA example in both client and server.
 	cd clinet
 	mkdir 
 	./client_rdma <port number>
+	
+![13](https://user-images.githubusercontent.com/28096724/87291927-be386a80-c508-11ea-9da7-b78d66f2a374.png)
+
 ### Test by ibv_rc_pingpong and ibv_read_lat:
 --ibv_rc_pingpong
 	
