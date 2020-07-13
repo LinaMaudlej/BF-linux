@@ -105,12 +105,12 @@ My GID index is 3. Change it in the RDMA example in both client and server.
 
 ### Try the RDMA example:
 	git clone https://github.com/LinaMaudlej/BF-linux.git
-	cd server 
+	cd server_rdma
 	mkdir 
 	./server 
-	cd clinet 
+	cd clinet
 	mkdir 
-	./client <port number>
+	./client_rdma <port number>
 ### Test by ibv_rc_pingpong and ibv_read_lat:
 --ibv_rc_pingpong
 	
