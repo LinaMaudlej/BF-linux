@@ -2,7 +2,7 @@
 
 In this document we exaplain how to install Linux distributions on BlueField.
 In our machine we have the host CPU and the Arm of BF. We need to install software in both host and BF side.
-Firstly, we will install the OFED in the host. [Mellanox OFED - is a Mellanox tested and packaged version of OFED and supports two interconnect types using the same RDMA (remote DMA) and kernel bypass APIs called OFED verbs – InfiniBand and Ethernet.]
+Firstly, we will install the OFED and rshim drivers in the host. [Mellanox OFED - is a Mellanox tested and packaged version of OFED and supports two interconnect types using the same RDMA (remote DMA) and kernel bypass APIs called OFED verbs – InfiniBand and Ethernet.]
 Secondly, we will install OFED + Ubuntu in the BF.
 Thirdly, we will set the configuration of the BF (Sperated mode vs Embedded mode)
 Finally, we will our OFED with one example with RDMA and another with OFED examples.
@@ -76,7 +76,7 @@ You should be able to see interface tmfifo_net and two outgoing network interfac
 
 
 
-### In the BF:
+## In the BF:
 
 ### Install the image to Bluefiled (Ubuntu 18.04 and OFED):
      cat  <bf_img.bfb> > /dev/rshim0/boot
@@ -85,8 +85,11 @@ Username: ssh ubuntu@192.168.100.2
 
 Password: ubuntu
 
-# Bluefiled on Ubuntu 18.04
 
+## Configuration:
+The firmware updated it to the defualt with embedded, let me try to switch to Separated first.
+
+## Tests:
 
 
 # Bluefiled on Centos 
