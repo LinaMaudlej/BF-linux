@@ -19,8 +19,12 @@ Finally, we will our OFED with one example with RDMA and another with OFED examp
 Go to:
 https://www.mellanox.com/products/software/bluefield
 * Download (to host machine) MLNX_OFED. <mlnx_ofed>
+
 * Download BlueField BlueOS. <BlueOS_dir>
 * Download (to host machine) BlueField Ubuntu Server 18.04 image. <bf_img.bfb>
+
+![1](https://user-images.githubusercontent.com/28096724/87292641-c6dd7080-c509-11ea-8031-f21ee3f094da.png)
+
 
 Run:
 
