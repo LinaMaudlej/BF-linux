@@ -20,6 +20,8 @@ Go to:
 https://www.mellanox.com/products/software/bluefield
 * Download (to host machine) MLNX_OFED. <mlnx_ofed>
 
+![2](https://user-images.githubusercontent.com/28096724/87292707-e2487b80-c509-11ea-9263-7e3f5e8b48a1.png)
+
 * Download BlueField BlueOS. <BlueOS_dir>
 * Download (to host machine) BlueField Ubuntu Server 18.04 image. <bf_img.bfb>
 
