@@ -104,7 +104,7 @@ use this index GID (RoCE doesn't work with LID-based routing), by picking any in
 My GID index is 3. Change it in the RDMA example in both client and server.
 
 ### Try the RDMA example:
-	git clone 
+	git clone https://github.com/LinaMaudlej/BF-linux.git
 	cd server 
 	mkdir 
 	./server 
