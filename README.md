@@ -110,6 +110,10 @@ In your host machine:
 use this index GID (RoCE doesn't work with LID-based routing), by picking any index from the GID table (it should probably be the same GID on both sides).
 My GID index is 3. Change it in the RDMA example in both client and server.
 
+
+	cat /sys/class/infiniband/mlx5_0/ports/1/gid_attrs/ndevs/
+https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
+
 ### Try the RDMA example:
 	git clone https://github.com/LinaMaudlej/BF-linux.git
 	cd server_rdma
