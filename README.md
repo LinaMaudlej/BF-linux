@@ -100,6 +100,9 @@ In your host machine:
 	mlxconfig -d /dev/mst/mt41682_pciconf0 q | grep -i model
 	
 ## Tests: (In the same machine)
+	show_gids mlx5_1
+use this index GID (RoCE doesn't work with LID-based routing), by picking any index from the GID table (it should probably be the same GID on both sides).
+My GID index is 3. Change it in the RDMA example in both client and server.
 
 ### Try the RDMA example:
 	git clone 
@@ -111,13 +114,9 @@ In your host machine:
 	./client <port number>
 ### Test by ibv_rc_pingpong and ibv_read_lat:
 --ibv_rc_pingpong
-
-	show_gids mlx5_1
-use a GID (RoCE doesn't work with LID-based routing), by picking any index from the GID table (it should probably be the same GID on both sides).
-My GID index is 3.
 	
-	ibv_rc_pingpong -d mlx5_1 -g <3> 
-	ibv_rc_ping_pong -g <3> 192.169.0.21
+	ibv_rc_pingpong -d mlx5_1 -g <gid_indx> 
+	ibv_rc_ping_pong -g <gid_index> 192.169.0.21
 	
 -- ibv_read_lat
 
