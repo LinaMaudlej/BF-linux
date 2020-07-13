@@ -67,7 +67,7 @@ SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="00:1a:ca:ff:ff:02", ATTR{type}=
 	reboot --force
 	ip add
 	
-You should be able to see interface tmfifo_net and two outgoing network interfacs.
+You should be able to see interface tmfifo_net and two outgoing network interfacs UP.
 	
 	sudo ifconfig tmfifo_net0 192.168.100.1/24 up
 	sudo ifconfig <first_interface> 192.168.0.20 up
@@ -80,7 +80,9 @@ You should be able to see interface tmfifo_net and two outgoing network interfac
 
 ### Install the image to Bluefiled (Ubuntu 18.04 and OFED):
      cat  <bf_img.bfb> > /dev/rshim0/boot
+     
 Username: ssh ubuntu@192.168.100.2
+
 Password: ubuntu
 
 # Bluefiled on Ubuntu 18.04
