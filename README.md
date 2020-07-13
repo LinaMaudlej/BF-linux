@@ -87,10 +87,42 @@ Password: ubuntu
 
 
 ## Configuration:
-The firmware updated it to the defualt with embedded, let me try to switch to Separated first.
+The firmware default mode is Embedded, in order to use RoCE you should switch to Separated mode.
+More information:
+https://community.mellanox.com/s/article/BlueField-SmartNIC-Modes
 
-## Tests:
+In your host machine:
 
+	mst start 
+	mlxconfig -d /dev/mst/mt41682_pciconf0 s INTERNAL_CPU_MODEL=0
+	reboot --force
+	mst start 
+	mlxconfig -d /dev/mst/mt41682_pciconf0 q | grep -i model
+	
+## Tests: (In the same machine)
+
+### Try the RDMA example:
+	git clone 
+	cd server 
+	mkdir 
+	./server 
+	cd clinet 
+	mkdir 
+	./client <port number>
+### Test by ibv_rc_pingpong and ibv_read_lat:
+--ibv_rc_pingpong
+
+	show_gids mlx5_1
+	use a GID (RoCE doesn't work with LID-based routing), by picking any index from the GID table (it should probably be the same GID on both sides).
+	My GID index is 3.
+	ibv_rc_pingpong -d mlx5_1 -g <3> 
+	ibv_rc_ping_pong -g <3> 192.169.0.21
+	
+-- ibv_read_lat
+
+	ibv_read_lat -a 
+	ibv_read_lat localhost -a 
+	
 
 # Bluefiled on Centos 
 TBD
