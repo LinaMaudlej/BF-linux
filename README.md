@@ -3,11 +3,8 @@
 In this document, we explain how to install Linux distributions on Bluefield. In our machine, we have the host CPU and the Arm of BF. We need to install the software on both the host and the BF side. 
 
 Firstly, we will install the OFED and rshim drivers in the host. [Mellanox OFED - is a Mellanox tested and packaged version of OFED and supports two interconnect types using the same RDMA (remote DMA) and kernel bypass APIs called OFED verbs – InfiniBand and Ethernet.] 
-
 Secondly, we will install OFED + Ubuntu in the BF. 
-
 Thirdly, we will set the configuration of the BF (Separated mode vs Embedded mode).
-
 Finally, we will our OFED with one example with RDMA and another with OFED examples.
 
 
