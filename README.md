@@ -125,7 +125,7 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 	
 ![13](https://user-images.githubusercontent.com/28096724/87291927-be386a80-c508-11ea-9da7-b78d66f2a374.png)
 
-### Test by ibv_rc_pingpong and ibv_read_lat:
+### 1) In the same machine: Test by ibv_rc_pingpong and ibv_read_lat:
 --ibv_rc_pingpong
 	
 	ibv_rc_pingpong -d mlx5_1 -g <gid_indx> 
@@ -136,6 +136,13 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 	ibv_read_lat -a 
 	ibv_read_lat localhost -a 
 	
+### 2) In remote machines (two machines, let's assume server machine has tmfifo_net0 192.169.100.1/24 and client machine tmfifo_net0 192.168.100.1/24): 
+-- ib_read_bw, in server side run:
+
+	ib_read_bw 
+in client side run:
+
+	ib_read_bw 192.169.100.1
 
 # Bluefiled on Centos 
 TBD
