@@ -7,10 +7,12 @@ Secondly, we will install OFED + Ubuntu in the BF.
 Thirdly, we will set the configuration of the BF (Separated mode vs Embedded mode).
 Finally, we will test our OFED with one RDMA example and another with OFED examples.
 
-(*) to configure two remote machine with rdma, you need to have different ips for the interface tmfifo_net and two outgoing network interfacs. 
+Notes: 
+
+1) In order to configure two remote machine with rdma, you need to have different ips for the interface tmfifo_net and two outgoing network interfacs. 
 For example use for one machine, tmfifo_net0 192.168.100.1/24 enp133s0f0 192.168.0.20/24 enp133s0f1 192.168.0.21/24 
 and for the another tmfifo_net0 192.169.100.1/24 ens2f0 192.169.0.20/24 ens2f1 192.169.0.21/24 
-(*) if the two outgoing network interfacs are not UP (after the configuration) check that your cables are connected correctly to the switch.
+2) if the two outgoing network interfacs are not UP (after the configuration) check that your cables are connected correctly to the switch.
 
 # Bluefiled on Ubuntu 18.04
 ## Requirment 
