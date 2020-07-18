@@ -121,16 +121,16 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 
 ### Try the RDMA example:
 	git clone https://github.com/LinaMaudlej/BF-linux.git
-	cd server_rdma
+	cd rdma-RoCE-local-machine/
 	mkdir 
-	./server 
-	cd clinet
+	./server_rdma 
+	cd client
 	mkdir 
 	./client_rdma <port number>
 	
 ![13](https://user-images.githubusercontent.com/28096724/87291927-be386a80-c508-11ea-9da7-b78d66f2a374.png)
 
-### 1) In the same machine: Test by ibv_rc_pingpong and ibv_read_lat:
+### Test by ibv_rc_pingpong and ibv_read_lat:
 --ibv_rc_pingpong
 	
 	ibv_rc_pingpong -d mlx5_1 -g <gid_indx> 
@@ -140,14 +140,25 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 
 	ibv_read_lat -a 
 	ibv_read_lat localhost -a 
-	
-### 2) In remote machines (two machines, let's assume server machine has tmfifo_net0 192.169.100.1/24 and client machine tmfifo_net0 192.168.100.1/24. Your ip of the server is <ip>): 
+
+## Tests: (In the remote machines)
+two machines, let's assume server machine has tmfifo_net0 192.169.100.1/24 and client machine tmfifo_net0 192.168.100.1/24. Your ip of the server is <ip>)
+
+### Test by ib_read_bw:
 -- ib_read_bw, in server side run:
 
 	ib_read_bw 
 in client side run:
 
 	ib_read_bw <ip>
+### Try the RDMA example:
+	git clone https://github.com/LinaMaudlej/BF-linux.git
+	cd rdma-RoCE-remote_machines/
+	mkdir 
+	./server_rdma 
+	cd client_rdma
+	mkdir 
+	./client_rdma <port number>
 
 # Bluefiled on Centos 
 TBD
