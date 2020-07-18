@@ -16,15 +16,57 @@
 #include <unistd.h>
 #include "rpc_common.h"
 
-struct ib_resources_t {
-	struct ibv_context *context;
-	struct ibv_pd *pd;
-	struct ibv_qp *qp;
-	struct ibv_cq *cq;
-	char result_buf[RES_BUF_SIZE];
-	char arg_buf[ARG_BUF_SIZE];
 
-};
+int get_gid_index(ibv_context* dev)
+{
+	return 3;
+	/*for (int i = 0; i < 0xffff; ++i) {
+	  ibv_gid gid;
+
+	  if (ibv_query_gid(dev, 1, i, &gid)) {
+	  printf("ibv_query_gid failed for gid %d", i);
+	  exit(1);
+	  }
+
+	  if (gid.global.subnet_prefix != 0ull ||
+	  (gid.global.interface_id & 0xffffffff) != 0xffff0000ull)
+	  continue;
+
+	  char gid_type_str[7];
+	  int len = ibv_read_sysfs_file("/sys/class/infiniband/mlx5_0/ports/1/gid_attrs/types",
+	  boost::lexical_cast<string>(i).c_str(), gid_type_str, sizeof(gid_type_str));
+	  if (len < 0) {
+	  printf("cannot read gid type for gid %d", i);
+	  return -1;
+	  }
+
+	  if (strncasecmp(gid_type_str, "RoCE v2", len) != 0)
+	  continue;
+
+	  return i;
+	  }
+	  return -1;*/
+}
+/*
+   struct ibv_context *ibv_open_device_by_name(const std::string& device_name)
+   {
+   int num_devices = 0;
+   struct ibv_device **devices_list = ibv_get_device_list(&num_devices);
+   if(!devices_list){
+   printf("ERROR: ibv_get_device_list() failed\n");
+   exit(1);
+   }
+   std::cout << "ibv_open_device_by_name: " << num_devices << " devices were found." << std::endl;
+   std::cout << "device_name is " << device_name << std::endl;
+   for (int i = 0; i < num_devices; ++i) {
+   string cur_name = ibv_get_device_name(devices_list[i]);
+   std::cout << "device[" << i << "] name: " << cur_name << std::endl;
+   if (device_name == cur_name){
+   std::cout << device_name << " found." << std::endl;
+   return ibv_open_device(devices_list[i]);
+   }
+   }
+   }*/
 
 
 int do_echo(char *arg_buf, char *result_buf) {
@@ -89,7 +131,35 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 		printf("ERROR: ibv_alloc_pd() failed\n");
 		exit(1);
 	}
+	struct ibv_mr *mr_recv;
+	char *recv_buf=(char*)malloc(HOST_TOTAL_DATA_FROM_CLIENT_SIZE);
+	mr_recv = ibv_reg_mr(pd, recv_buf, HOST_TOTAL_DATA_FROM_CLIENT_SIZE, IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_WRITE);
+	if (!mr_recv) {
+		printf("ibv_reg_mr() failed for data_for_host\n");
+		exit(1);
+	}
 
+	struct ibv_mr *mr_send;
+       char *send_buf=(char*)malloc(HOST_TOTAL_DATA_TO_CLIENT_SIZE);
+	mr_send = ibv_reg_mr(pd, send_buf, HOST_TOTAL_DATA_FROM_CLIENT_SIZE, IBV_ACCESS_LOCAL_WRITE | IBV_ACCESS_REMOTE_READ);
+	if (!mr_send) {
+		printf("ibv_reg_mr() failed for data_from_host\n");
+		exit(1);
+	}
+
+	struct ibv_cq *recv_cq = ibv_create_cq(context, HOST_RECV_CQ_SIZE, NULL, NULL, 0);
+	if (!recv_cq) {
+		printf("ERROR: ibv_create_cq() failed\n");
+		exit(1);
+	}
+
+
+
+	struct ibv_cq *send_cq = ibv_create_cq(context, HOST_SEND_CQ_SIZE, NULL, NULL, 0);
+	if (!send_cq) {
+		printf("ibv_create_cq() failed\n");
+		exit(1);
+	}    
 	/* allocate a memory region for the RPC arguments.
 	 *      * must be writeable by client */
 	struct ibv_mr *mr_args;
@@ -154,6 +224,12 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 	my_info.addr_args = (uintptr_t)mr_args->addr;
 	my_info.mkey_result = mr_result->rkey;
 	my_info.addr_result = (uintptr_t)mr_result->addr;
+	int gid_index = get_gid_index(context);
+	if (ibv_query_gid(context, 1, gid_index, &(my_info.gid) )) {
+		printf("ibv_query_gid failed for gid \n");
+		exit(1);
+	}
+
 	ret = send(sfd, &my_info, sizeof(struct ib_info_t), 0);
 	if (ret < 0) {
 		perror("send");
@@ -166,7 +242,11 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 		perror("recv");
 		exit(1);
 	}
+
+
 	/* we don't need TCP anymore. kill the socket */
+
+
 	close(sfd);
 	close(lfd);
 	/* now need to connect the QP to the client's QP.
@@ -193,11 +273,11 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 	qp_attr.path_mtu = IBV_MTU_4096;
 	qp_attr.dest_qp_num = client_info.qpn; /* qp number of client */
 	qp_attr.rq_psn      = 0 ;
-	qp_attr.max_dest_rd_atomic = 2; //changed/* max in-flight RDMA reads */
+	qp_attr.max_dest_rd_atomic = 1; //changed/* max in-flight RDMA reads */
 	qp_attr.min_rnr_timer = 12;
 	qp_attr.ah_attr.is_global = 1; /* No Network Layer (L3) */
-	ibv_query_gid(context, 1, 3, &(qp_attr.ah_attr.grh.dgid));
-	qp_attr.ah_attr.grh.sgid_index =3;// get_gid_index(context);
+	qp_attr.ah_attr.grh.dgid = client_info.gid;
+	qp_attr.ah_attr.grh.sgid_index =get_gid_index(context);// get_gid_index(context);
 	qp_attr.ah_attr.grh.flow_label = 0;
 	qp_attr.ah_attr.grh.hop_limit = 1;
 	qp_attr.ah_attr.grh.traffic_class = 0;
@@ -216,9 +296,9 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 	qp_attr.qp_state = IBV_QPS_RTS;
 	qp_attr.sq_psn = 0;
 	qp_attr.timeout = 14;
-	qp_attr.retry_cnt = 100; //100
-	qp_attr.rnr_retry = 100;
-	qp_attr.max_rd_atomic = 2; //changed
+	qp_attr.retry_cnt = 7; //100
+	qp_attr.rnr_retry = 7;
+	qp_attr.max_rd_atomic = 1; //changed
 	ret = ibv_modify_qp(qp, &qp_attr, IBV_QP_STATE | IBV_QP_TIMEOUT | IBV_QP_RETRY_CNT | IBV_QP_RNR_RETRY | IBV_QP_SQ_PSN | IBV_QP_MAX_QP_RD_ATOMIC);
 	if (ret) {
 		printf("ERROR: ibv_modify_qp() to RTS failed\n");
@@ -242,12 +322,14 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 	ib_resources->context = context;
 	ib_resources->pd = pd;
 	ib_resources->qp = qp;
-	ib_resources->cq = cq;
-	/*ib_resources->server_args_key = server_info.mkey_args;
-	  ib_resources->server_args_addr = server_info.addr_args;
-	  ib_resources->server_result_key = server_info.mkey_result;
-	  ib_resources->server_result_addr = server_info.addr_result;
-	  */
+	ib_resources->send_cq = send_cq;
+	ib_resources->recv_cq = recv_cq;
+
+	ib_resources->lrecv_buf = recv_buf;
+	ib_resources->lmr_recv = mr_recv;
+	ib_resources->lsend_buf = send_buf;
+	ib_resources->lmr_send = mr_send;
+
 	return ib_resources; 
 
 }
@@ -255,7 +337,10 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 
 void teardown_connection(struct ib_resources_t *ib_resources) {
 	ibv_destroy_qp(ib_resources->qp);
-	ibv_destroy_cq(ib_resources->cq);
+	ibv_destroy_cq(ib_resources->send_cq);
+	ibv_destroy_cq(ib_resources->recv_cq);
+
+
 	ibv_dealloc_pd(ib_resources->pd);
 	ibv_close_device(ib_resources->context);
 }
@@ -287,7 +372,7 @@ int main(int argc, char *argv[]) {
 		struct ibv_wc wc;
 		int ncqes;
 		do {
-			ncqes = ibv_poll_cq(ib_resources->cq, 1, &wc);
+			ncqes = ibv_poll_cq(ib_resources->recv_cq, 1, &wc);
 		} while (ncqes == 0);
 		if (ncqes < 0) {
 			printf("ERROR: ibv_poll_cq() failed\n");
@@ -348,7 +433,7 @@ int main(int argc, char *argv[]) {
 
 		/* now poll CQ for completion of our RDMA send with immediate.*/
 		do {
-			ncqes = ibv_poll_cq(ib_resources->cq, 1, &wc);
+			ncqes = ibv_poll_cq(ib_resources->recv_cq, 1, &wc);
 		} while (ncqes == 0);
 		if (ncqes < 0) {
 			printf("ERROR: ibv_poll_cq() failed\n");
