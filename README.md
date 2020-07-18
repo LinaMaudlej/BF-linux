@@ -141,13 +141,13 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 	ibv_read_lat -a 
 	ibv_read_lat localhost -a 
 	
-### 2) In remote machines (two machines, let's assume server machine has tmfifo_net0 192.169.100.1/24 and client machine tmfifo_net0 192.168.100.1/24): 
+### 2) In remote machines (two machines, let's assume server machine has tmfifo_net0 192.169.100.1/24 and client machine tmfifo_net0 192.168.100.1/24. Your ip of the server is <ip>): 
 -- ib_read_bw, in server side run:
 
 	ib_read_bw 
 in client side run:
 
-	ib_read_bw 192.169.100.1
+	ib_read_bw <ip>
 
 # Bluefiled on Centos 
 TBD
