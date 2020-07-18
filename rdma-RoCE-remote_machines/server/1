@@ -417,7 +417,7 @@ int main(int argc, char *argv[]) {
 
 		/* now poll CQ for completion of our RDMA send with immediate.*/
 		do {
-			ncqes = ibv_poll_cq(ib_resources->send_cq, 1, &wc);
+			ncqes = ibv_poll_cq(ib_resources->recv_cq, 1, &wc);
 		} while (ncqes == 0);
 		if (ncqes < 0) {
 			printf("ERROR: ibv_poll_cq() failed\n");
