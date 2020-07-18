@@ -122,10 +122,9 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 ### Try the RDMA example:
 	git clone https://github.com/LinaMaudlej/BF-linux.git
 	cd rdma-RoCE-local-machine/
-	mkdir 
+	cd server 
 	./server_rdma 
 	cd client
-	mkdir 
 	./client_rdma <port number>
 	
 ![13](https://user-images.githubusercontent.com/28096724/87291927-be386a80-c508-11ea-9da7-b78d66f2a374.png)
@@ -154,10 +153,9 @@ in client side run:
 ### Try the RDMA example:
 	git clone https://github.com/LinaMaudlej/BF-linux.git
 	cd rdma-RoCE-remote_machines/
-	mkdir 
+	cd server
 	./server_rdma 
 	cd client_rdma
-	mkdir 
 	./client_rdma <port number>
 
 # Bluefiled on Centos 
