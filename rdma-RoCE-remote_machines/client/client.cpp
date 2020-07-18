@@ -116,17 +116,18 @@ void rpc_call(struct ib_resources_t *ib_resources,
 		wr.wr.rdma.remote_addr = ib_resources->server_args_addr;
 		wr.wr.rdma.rkey = ib_resources->server_args_key;
 
+		printf("post the WQE to the HCA to execute it\n");
 		/* post the WQE to the HCA to execute it */
 		if (ibv_post_send(ib_resources->qp, &wr, &bad_wr)) {
 			printf("ERROR: ibv_post_send() failed\n");
 			exit(1);
 		}
-
+		
 
 		/* When WQE is completed we expect a CQE */
 		/* wait for CQE on this operation so we know it is completed */
 		do {
-			ncqes = ibv_poll_cq(ib_resources->recv_cq, 2, &wc);//changes 1->2
+			ncqes = ibv_poll_cq(ib_resources->send_cq, 2, &wc);//changes 1->2
 		} while (ncqes == 0);
 		if (ncqes < 0) {
 			printf("ERROR: ibv_poll_cq() failed\n");
@@ -163,7 +164,7 @@ void rpc_call(struct ib_resources_t *ib_resources,
 	/* wait for CQE on this operation so we know it is completed.
 	 *      * make sure ibv_poll_cq() succeeded and cqe is not error*/
 	do {
-		ncqes = ibv_poll_cq(ib_resources->recv_cq, 1, &wc);
+		ncqes = ibv_poll_cq(ib_resources->send_cq, 1, &wc);
 	} while (ncqes == 0);
 	if (ncqes < 0) {
 		printf("ERROR: ibv_poll_cq() failed\n");
@@ -227,7 +228,7 @@ void rpc_call(struct ib_resources_t *ib_resources,
 
 		/* wait for CQE on this operation so we know it is completed */
 		do {
-			ncqes = ibv_poll_cq(ib_resources->recv_cq, 1, &wc);
+			ncqes = ibv_poll_cq(ib_resources->send_cq, 1, &wc);
 		} while (ncqes == 0);
 		if (ncqes < 0) {
 			printf("ERROR: ibv_poll_cq() failed\n");
@@ -392,7 +393,7 @@ struct ib_resources_t *setup_connection(int tcp_port) {
 	my_info.addr_result = (uintptr_t)mr_send->addr;	
 	
 	int gid_index = get_gid_index(context);
-	if (ibv_query_gid(context, 1, gid_index, &(my_info.gid) )) {
+	if (ibv_query_gid(context, 1, 3, &(my_info.gid) )) {
 		printf("ibv_query_gid failed for gid \n");
 		exit(1);
 	}
