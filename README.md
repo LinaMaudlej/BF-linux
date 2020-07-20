@@ -5,7 +5,9 @@ In this document, we explain how to install Linux distributions on Bluefield. In
 Firstly, we will install the OFED and rshim drivers in the host. [Mellanox OFED - is a Mellanox tested and packaged version of OFED and supports two interconnect types using the same RDMA (remote DMA) and kernel bypass APIs called OFED verbs – InfiniBand and Ethernet.] 
 Secondly, we will install OFED + Ubuntu in the BF. 
 Thirdly, we will set the configuration of the BF (Separated mode vs Embedded mode).
-Finally, we will test our OFED with one RDMA example and another with OFED examples.
+Fourthly, we will test our OFED with one RDMA example and another with OFED examples. (local and remote rdma) 
+Finally, we will create NAT; BF has its private network to the host via the USB connection, you can also move packages from host to BF via scp. In order to have network enablement inside the BF we have two options 1) Bridge, to give the BF an external ip address 2)SNAT and DNAT (source and destination NAT) via setting up the routing on the host. 
+
 
 Notes: 
 
@@ -95,7 +97,7 @@ You should be able to see interface tmfifo_net and two outgoing network interfac
 Username: ssh ubuntu@192.168.100.2
 
 Password: ubuntu
-### if you have a problem with ssh, you can enter the console 
+### if you have a problem with ssh (or you want to change the defualt ip of tmfifo_net0) , you can enter the console 
 	sudo screen /dev/rshim0/console
 
 ## Configuration:
@@ -158,6 +160,14 @@ in client side run:
 	./server_rdma 
 	cd client_rdma
 	./client_rdma <port number>
+
+## Ping TBD
+
+	iptables -t nat -A POSTROUTING -o <outgoing network interface> -j MASQUERADE
+	echo 1 > /proc/sys/net/ipv4/ip_forward
+	/etc/init.d/openibd start
+	ssh <to_bf>
+	ping google.com 	
 
 # Bluefiled on Centos 
 TBD
