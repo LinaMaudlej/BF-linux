@@ -95,7 +95,8 @@ You should be able to see interface tmfifo_net and two outgoing network interfac
 Username: ssh ubuntu@192.168.100.2
 
 Password: ubuntu
-
+### if you have a problem with ssh, you can enter the console 
+	sudo screen /dev/rshim0/console
 
 ## Configuration:
 The firmware default mode is Embedded, in order to use RoCE you should switch to Separated mode.
