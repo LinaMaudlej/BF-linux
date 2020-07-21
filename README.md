@@ -15,6 +15,8 @@ Notes:
 For example use for one machine, tmfifo_net0 192.168.100.1/24 enp133s0f0 192.168.0.20/24 enp133s0f1 192.168.0.21/24 
 and for the another tmfifo_net0 192.169.100.1/24 ens2f0 192.169.0.20/24 ens2f1 192.169.0.21/24 
 2) if the two outgoing network interfacs are not UP (after the configuration) check that your cables are connected correctly to the switch.
+3) enabling the external network may cause failures if you use docker, etc. run sudo service docker restart to update everything..
+
 
 # Bluefiled on Ubuntu 18.04
 ## Requirment 
