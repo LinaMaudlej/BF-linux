@@ -161,14 +161,48 @@ in client side run:
 	cd client_rdma
 	./client_rdma <port number>
 
-## Ping TBD
+## Enable NAT in BF
 
-	iptables -t nat -A POSTROUTING -o <outgoing network interface> -j MASQUERADE
-	echo 1 > /proc/sys/net/ipv4/ip_forward
-	/etc/init.d/openibd start
-	ssh <to_bf>
-	ping google.com 	
+- In your host machine, show your DNS ip:
+		
+		systemd-resolve --status
+### DNS configuration for BF	
+- Go to BF and add to  /etc/resolv.conf
+		
+		vim /etc/resolv.conf
+nameserver <DNS_ip>
+nameserver 8.8.8.8
+### tmfifo_net0 NIC over PCIe configuration on BF
+		etc/network/interfaces.d/tmfifo
 
+auto tmfifo_net0
+iface tmfifo_net0 inet static
+        address 192.168.100.2/30
+        gateway 192.168.100.1
+        dns-nameservers <DNS_ip>
+	
+		sudo ifdown tmfifo_net0 && sudo ifup tmfifo_net0
+
+## Enable NAT in host
+Activate IP-forwarding in the kernel.
+	
+	echo "1" > /proc/sys/net/ipv4/ip_forward
+	
+Allow established connections from the public interface.
+
+	iptables -A INPUT -i <outgoing interface> -m state --state ESTABLISHED,RELATED -j ACCEPT
+	
+Set up IP FORWARDing and Masquerading	
+	 
+	 iptables --table nat --append POSTROUTING --out-interface <outgoing interface> -j MASQUERADE
+	 iptables --append FORWARD --in-interface tmfifo_net0 -j ACCEPT
+
+Allow outgoing connections
+	   
+	   iptables -A OUTPUT -j ACCEPT
+
+	
+	
 # Bluefiled on Centos 
 TBD
 
