@@ -48,7 +48,7 @@ Run:
 
 ### OFED: 
 	mount <mlnx_ofed>.iso /mnt
-	sudo /mnt/uninstall --force
+	sudo /mnt/uninstall.sh --force
 	sudo /mnt/mlnxofedinstall --add-kernel-support 
 You should see that it is installed: 
 Querying Mellanox devices firmware ...
@@ -184,7 +184,7 @@ iface tmfifo_net0 inet static
         dns-nameservers <DNS_ip>
 	
 		sudo ifdown tmfifo_net0 && sudo ifup tmfifo_net0
-
+you can reboot the BF to make sure the tmfifo_net0 has correctly changed
 ## Enable NAT in host
 Activate IP-forwarding in the kernel.
 	
