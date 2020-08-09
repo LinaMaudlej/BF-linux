@@ -54,6 +54,9 @@ Run:
 You should see that it is installed: 
 Querying Mellanox devices firmware ...
 
+Check your firmware version:
+	
+	sudo mlxfwmanage
 
 ### rshim drivers: 
 	cd <BlueOS_dir>/src/drivers/rshim
