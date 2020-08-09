@@ -14,7 +14,8 @@ Notes:
 1) In order to configure two remote machine with rdma, you need to have different ips for the interface two outgoing network interfacs. 
 For example use for one machine, enp133s0f0 192.168.0.20/24 enp133s0f1 192.168.0.21/24 
 and for the another ens2f0 192.168.0.22/24 ens2f1 192.168.0.23/24 
-2) if the two outgoing network interfacs are not UP (after the configuration) check that your cables are connected correctly to the switch.
+2) if the two outgoing network interfacs are not UP (after the configuration) check that your cables are connected correctly to the switch. Additionally, a power outage may reset switch configuration especially for a split cable.
+See the switch configutation**. 
 3) enabling the external network may cause failures if you use docker, etc. run sudo service docker restart to update everything..
 
 
@@ -142,8 +143,8 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 	
 -- ibv_read_lat
 
-	ibv_read_lat -a 
-	ibv_read_lat localhost -a 
+	ib_read_lat -a 
+	ib_read_lat localhost -a 
 
 ## Tests: (In the remote machines)
 two machines, let's assume server machine has tmfifo_net0 192.169.100.1/24 and client machine tmfifo_net0 192.168.100.1/24. Your ip of the server is <ip>)
@@ -207,6 +208,19 @@ Allow outgoing connections
 	
 # Bluefiled on Centos 
 TBD
+
+# Switch configuration 
+Let's take for example a switch, its output is 40GB. We want to split it to 4 cables. Every cable will be divided into 40/4=10GB (note that the BF can work with 25GB for each one). 
+We are working with two machines , in order to configure it again to work with 4 cables we do the following:
+1) $ssh to the machine that is connected to the switch
+2) $sudo screen /dev/ttyS0 115200
+3) $show interfaces ethernet 1/5
+4) $enable
+5) $configure terminal
+6) $interface ethernet 1/5 shutdown 
+7) $interface ethernet 1/5 module-type qsfp-split-4 force
+
+
 
 # References 
 https://drive.google.com/open?id=1IHpo1s06yhV-4PouQiFSYelbkUWEgCpa
