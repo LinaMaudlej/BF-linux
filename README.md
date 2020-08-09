@@ -217,12 +217,39 @@ Let's take for example a switch, its output is 40GB. We want to split it to 4 ca
 We are working with two machines , in order to configure it again to work with 4 cables we do the following:
 1) $ssh to the machine that is connected to the switch
 2) $sudo screen /dev/ttyS0 115200
+
+Find your switch interface number from the User Manual. For example, in my switch this is the manual https://www.mellanox.com/related-docs/prod_management_software/MLNX-OS_ETH_v3_6_3508_UM.pdf and I see that I am using ethernet 5.
+![image](https://user-images.githubusercontent.com/28096724/89739641-0a84b500-da8b-11ea-952e-70719e7e1394.png)
+
+
 3) $show interfaces ethernet 1/5
 4) $enable
 5) $configure terminal
 6) $interface ethernet 1/5 shutdown 
 7) $interface ethernet 1/5 module-type qsfp-split-4 force
 
+
+
+## Issues
+1) mlx5_core 0000:04:00.1: port_module:247:(pid 0): Port module event[error]: module 1, Cable error, Bus stuck (I2C or data shorted)
+
+This issue happened for me and I solved it with these techniques: 
+1) First, disconnect the USB port which is connected to the BF and the host machine.
+2) Plug out the InfiniBand cables.
+2) I reinstalled the latest OFED with the latest firmware, check the firmware compatibility with your Part Number here https://docs.mellanox.com/m/view-rendered-page.action?abstractPageId=25139410.
+
+
+		mlxfwmanager 
+take the Part Number. For example: MBF1M332A 
+![image (1)](https://user-images.githubusercontent.com/28096724/89739497-c6dd7b80-da89-11ea-957d-619b4ecac17e.png)
+
+
+3) Make sure you have the interfaces and the check your dmesg, you should not see the error here. 
+4) Configure your switch (split-cable or not ..).
+5) Plugin the ports again, if the error appears again, then there is a problem with the connectivity or the cables. 
+- Make sure that you see the led blinking with yellow (Orange means there is a problem with the connection/the way it is connected) 
+- If this doesn't help, replace the cables. 
+6) Make sure the yellow appears for both cables (ports) in each BF and the switch also blinks with yellow. 
 
 
 # References 
