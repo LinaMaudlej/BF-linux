@@ -128,7 +128,7 @@ My GID index is 3. Change it in the RDMA example in both client and server.
 	cat /sys/class/infiniband/mlx5_0/ports/1/gid_attrs/ndevs/
 https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 
-### Try the RDMA example:
+### Try the RDMA example: (The example doesn't require to have the two interface ports UP with IPs, because we use ROCE and ROCE has a default GID that is configured with MAC address of the port, so it can be used without an IP address (at least locally). This GID is similar to the link local IP address). 
 	git clone https://github.com/LinaMaudlej/BF-linux.git
 	cd rdma-RoCE-local-machine/
 	cd server 
@@ -217,6 +217,8 @@ Let's take for example a switch, its output is 40GB. We want to split it to 4 ca
 We are working with two machines , in order to configure it again to work with 4 cables we do the following:
 1) $ssh to the machine that is connected to the switch
 2) $sudo screen /dev/ttyS0 115200
+
+-Note that, the physical order of the splitted cables doesn't matter. The switch uses MAC learning to dynamically build a forwarding database, translating a MAC address to its port. 
 
 Find your switch interface number from the User Manual. For example, in my switch this is the manual https://www.mellanox.com/related-docs/prod_management_software/MLNX-OS_ETH_v3_6_3508_UM.pdf and I see that I am using ethernet 5.
 ![image](https://user-images.githubusercontent.com/28096724/89739641-0a84b500-da8b-11ea-952e-70719e7e1394.png)
