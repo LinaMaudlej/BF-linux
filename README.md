@@ -179,7 +179,7 @@ in client side run:
 nameserver <DNS_ip>
 nameserver 8.8.8.8
 ### tmfifo_net0 NIC over PCIe configuration on BF
-		etc/network/interfaces.d/tmfifo
+		vim /etc/network/interfaces.d/tmfifo
 
 auto tmfifo_net0
 iface tmfifo_net0 inet static
