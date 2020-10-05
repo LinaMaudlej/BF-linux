@@ -207,7 +207,11 @@ Allow outgoing connections
 	   
 	   iptables -A OUTPUT -j ACCEPT
 	   iptables -A FORWARD -i <outgoing interface> -o tmfifo_net0 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-	
+
+Example:	   
+sudo iptables -A FORWARD -i enp0s31f6 -o tmfifo_net0 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A FORWARD -i tmfifo_net0 -j ACCEPT
+sudo iptables -t nat -A POSTROUTING -o enp0s31f6 -j MASQUERAD	
 	
 # Bluefiled on Centos 
 TBD
