@@ -206,7 +206,7 @@ Set up IP FORWARDing and Masquerading
 Allow outgoing connections
 	   
 	   iptables -A OUTPUT -j ACCEPT
-
+	   iptables -A FORWARD -i <outgoing interface> -o tmfifo_net0 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 	
 	
 # Bluefiled on Centos 
