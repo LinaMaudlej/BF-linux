@@ -88,7 +88,8 @@ SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="00:1a:ca:ff:ff:02", ATTR{type}=
 You should be able to see interface tmfifo_net and two outgoing network interfacs UP.
 	
 	sudo ifconfig tmfifo_net0 192.168.100.1/24 up
-	sudo ifconfig <first_interface> 192.168.0.20 up
+This will make the 3 index GID available :
+	sudo ifconfig <first_interface> 192.168.0.20 up  
 	sudo ifconfig <second_interface> 192.168.0.21 up
 	
 ![12](https://user-images.githubusercontent.com/28096724/87291069-80871200-c507-11ea-8289-3cb2709d9a44.png)
@@ -120,7 +121,7 @@ In your host machine:
 	mlxconfig -d /dev/mst/mt41682_pciconf0 q | grep -i model
 	
 ## Tests: (In the same machine)
-	show_gids mlx5_1
+	show_gids mlx5_1 or mlx5_0 
 use this index GID (RoCE doesn't work with LID-based routing), by picking any index from the GID table (it should probably be the same GID on both sides).
 My GID index is 3. Change it in the RDMA example in both client and server.
 
