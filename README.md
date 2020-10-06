@@ -128,6 +128,12 @@ My GID index is 3. Change it in the RDMA example in both client and server.
 	cat /sys/class/infiniband/mlx5_0/ports/1/gid_attrs/ndevs/
 https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 
+	ip add 
+Make sure that both ports are UP. if not, use the one that is up in the code. 
+In client.cpp and server.cpp, update the idx of the device_list. 
+ 		
+	struct ibv_context *context = ibv_open_device(device_list[idx]);
+
 ### Try the RDMA example: (The example doesn't require to have the two interface ports UP with IPs, because we use ROCE and ROCE has a default GID that is configured with MAC address of the port, so it can be used without an IP address (at least locally). This GID is similar to the link local IP address). 
 	git clone https://github.com/LinaMaudlej/BF-linux.git
 	cd rdma-RoCE-local-machine/
@@ -151,6 +157,10 @@ https://community.mellanox.com/s/article/howto-configure-roce-on-connectx-4
 
 ## Tests: (In the remote machines)
 two machines, let's assume server machine has tmfifo_net0 192.168.100.1/24 and client machine tmfifo_net0 192.168.100.1/24. Your ip of the server is <ip>)
+
+update the line in client.cpp with the correct ip address. (it is hardcoded)
+
+	server_addr.sin_addr.s_addr = inet_addr(ip_addr); 
 
 ### Test by ib_read_bw:
 -- ib_read_bw, in server side run:
