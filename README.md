@@ -15,7 +15,7 @@ Notes:
 For example use for one machine, enp133s0f0 192.168.0.20/24 enp133s0f1 192.168.0.21/24 
 and for the another ens2f0 192.168.0.22/24 ens2f1 192.168.0.23/24 
 2) if the two outgoing network interfacs are not UP (after the configuration) check that your cables are connected correctly to the switch. Additionally, a power outage may reset switch configuration especially for a split cable.
-See the switch configutation**. 
+See the switch configutation**.  Anyway, you can use on port since each port is full-duplex (allows communication in both directions - transmit/receive) 
 3) enabling the external network may cause failures if you use docker, etc. run sudo service docker restart to update everything..
 
 
@@ -71,7 +71,7 @@ Check your firmware version:
 	sudo modprobe rshim_usb
 	sudo modprobe rshim_net
 	
-##### If the "First" did not work, pease  install it manually by:
+##### If the "First" did not work, please install it manually by:
 
 	make -C /lib/modules/`uname -r`/build M=$PWD
 	sudo modprobe rshim_usb
