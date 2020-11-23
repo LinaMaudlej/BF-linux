@@ -86,8 +86,11 @@ SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="00:1a:ca:ff:ff:02", ATTR{type}=
 	ip add
 	
 You should be able to see interface tmfifo_net and two outgoing network interfacs UP.
+tmfifo_net: when running the following command, you are declaring the gateway  192.168.100.1. you can then ssh using  192.168.100.2 which is the internal BF ip.
+you can change the  192.168.100.2 when you ssh use the sudo ifconfig tmfifo_net0 again with the new ip. Note that DON'T change the gateway  192.168.100.1 ips of the BF machines.
 	
 	sudo ifconfig tmfifo_net0 192.168.100.1/24 up
+
 This will make the 3 index GID available :
 	sudo ifconfig <first_interface> 192.168.0.20 up  
 	sudo ifconfig <second_interface> 192.168.0.21 up
@@ -102,8 +105,14 @@ This will make the 3 index GID available :
      cat  <bf_img.bfb> > /dev/rshim0/boot
      
 Username: ssh ubuntu@192.168.100.2
-
 Password: ubuntu
+Now you can also declare the internal ports of the BF by:
+This will make the 3 index GID available :
+
+	sudo ifconfig <first_interface> 192.168.0.23 up  
+	sudo ifconfig <second_interface> 192.168.0.24 up
+It is important to have different ips so you can use it also with connecting two BFs for example.
+
 ### if you have a problem with ssh (or you want to change the defualt ip of tmfifo_net0) , you can enter the console 
 	sudo screen /dev/rshim0/console
 
@@ -166,10 +175,14 @@ update the line in client.cpp with the correct ip address. (it is hardcoded)
 ### Test by ib_read_bw:
 -- ib_read_bw, in server side run:
 
-	ib_read_bw 
+	ib_read_bw -d mlx5_0  -g 3 -p 1234
 in client side run:
 
-	ib_read_bw <ip>
+	ib_read_bw -d mlx5_0 -p 1234 <ip>
+
+use the ip of (the BF port) you declared in the BF (internal port), for example 192.168.0.22 , to connect to BF ip. In this example if the ib_read_bw -d mlx5_0  -g 3 -p 1234 runs on the BF1 then ib_read_bw -d mlx5_0 -p 1234 <ip> will have the ip of the BF1. If it runs on host then  <ip> will have the ip of the machine host.
+
+	
 ### Try the RDMA example:
 	git clone https://github.com/LinaMaudlej/BF-linux.git
 	cd rdma-RoCE-remote_machines/
