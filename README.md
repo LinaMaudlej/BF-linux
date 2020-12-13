@@ -17,6 +17,11 @@ and for the another ens2f0 192.168.0.22/24 ens2f1 192.168.0.23/24
 2) if the two outgoing network interfacs are not UP (after the configuration) check that your cables are connected correctly to the switch. Additionally, a power outage may reset switch configuration especially for a split cable.
 See the switch configutation**.  Anyway, you can use on port since each port is full-duplex (allows communication in both directions - transmit/receive) 
 3) enabling the external network may cause failures if you use docker, etc. run sudo service docker restart to update everything..
+4) You can use the show_gids  command and you will see the gid table.
+* The first two entries:  there are two different types v1,v2 (for RoCEv1,2). In the attached example, entries on port 1 index 0/1 are the default GIDs, one for each supported RoCE type.
+* The second two entries: the infinband devices are matched with net devices, check with ibdev2netdev. In your case you have the only first interface/netdevice is UP, so entries on port 1 index 2/3 belong to IP address 192.168.0.22 on enp133s0f0 ( 2/3 are not mapped for enp133s0f1).
+Since all machines have the same table, we need to use the index 3 for all of them.
+** We should have the GID index (network layer, similar to IP address) for RoCE - RoCE doesn't work with LID-based routing (performing RDMA over Ethernet not Infiniband). 
 
 
 # Bluefiled on Ubuntu 18.04
