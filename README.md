@@ -22,7 +22,8 @@ See the switch configutation**.  Anyway, you can use on port since each port is 
 * The second two entries: the infinband devices are matched with net devices, check with ibdev2netdev. In your case you have the only first interface/netdevice is UP, so entries on port 1 index 2/3 belong to IP address 192.168.0.22 on enp133s0f0 ( 2/3 are not mapped for enp133s0f1).
 Since all machines have the same table, we need to use the index 3 for all of them.
 ** We should have the GID index (network layer, similar to IP address) for RoCE - RoCE doesn't work with LID-based routing (performing RDMA over Ethernet not Infiniband). 
-https://github.com/LinaMaudlej/BF-linux/issues/1#issuecomment-744084891
+
+![image](https://user-images.githubusercontent.com/28096724/102026866-1d94f200-3da9-11eb-960f-9618ad2fe6d3.png)
 
 # Bluefiled on Ubuntu 18.04
 ## Requirment 
